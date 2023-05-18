@@ -42,7 +42,7 @@
 ### Phase-3 - Reboot
 ```
  - Your GRUB menu should have appeared
- - Intially login through root
+ - Intially login through root ( Username: root)
  - useradd -m MyName ( Create user )
  - passwd MyName ( User password )
  - pacman -S sudo (Install sudo)
@@ -59,5 +59,39 @@
  - systemctl enable optimus-manager
  - nano /etc/default/grub
    - To GRUB_CMDLINE_LINUX_DEFAULT="..." add "optimus-manager.startup=nvidia"
- - grub-mkconfig -o /boot/grub/grub.cfg
+ - grub-mkconfig -o /boot/grub/grub.cfg ( and reboot )
+```
+
+### Phase-5 Adding closest mirrors
+```
+ - Visit https://archlinux.org/mirrorlist/?ip_version=4
+ - Add your location's mirrors to the file "/etc/pacman.d/mirrorlist" ( using nano ) on the top ( make sure you uncomment the mirrors )
+```
+
+### Phase-6 Installing Steam and applications
+```
+ - pacman -S dnsmasq firewalld powerdevil ( Trust me you want these )
+   - systemctl enable dnsmasq firewalld
+ - nano /etc/pacman.conf ( Uncomment the #[multilib] and #Include statement below it )
+ - pacman -Syu
+ - pacman -S steam ( Steam is a 32 bit application and hence requires multilib repository )
+```
+
+### Phase-7 Install AUR helper
+```
+ - AUR helpers are applications that install packages from AUR
+ - pacman -S base-devel git
+ - git clone https://aur.archlinux.org/yay.git
+ - cd yay && makepkg -si
+ - Install AUR packages using "yay -S slack-desktop"
+```
+
+### General recommendations
+```
+ - ALWAYS update "pacman -Syu" before installing applications, or bad things happen ( check linux dependancy hell )
+ - After an update to clean out old packages to save disk space
+   - pacman -Sc
+ - Install gamemode "pacman -S gamemode", and add "gamemoderun %command%" launch parameter to steam games, for optimizations.
+ - Use command "journalctl -xb -p 3" to check errors
+ - While uninstalling packages use "pacman -Rsn <package-name>" to also remove dependancies of the package
 ```
