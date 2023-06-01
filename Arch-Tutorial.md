@@ -19,6 +19,7 @@
    - mount --mkdir /dev/sda3 /mnt/boot
    - swapon /dev/sda2
  - Install arch packages from internet to the main system
+   - pacman -Sy archlinux-keyring ( In-case the live environment itself is outdated )
    - pacstrap /mnt base linux linux-firmware nano networkmanager ( NetworkManager is important so that ur wifi works after restart )
  - Create a Genfstab ( So that your main system remembers where the mount partitions are for root, boot and swap )
    - genfstab -U /mnt >> /mnt/etc/fstab
@@ -39,51 +40,51 @@
  - pacman -S plasma sddm konsole ( Install kde )
 ```
 
-### Phase-3 - Reboot
+### Phase-3 - Create User
 ```
- - Your GRUB menu should have appeared
- - Intially login through root ( Username: root)
  - useradd -m MyName ( Create user )
  - passwd MyName ( User password )
  - pacman -S sudo (Install sudo)
  - EDITOR=nano visudo ( Edit sudoers file )
    - Scroll down and below "root ALL=(ALL:ALL) ALL" add "MyName ALL=(ALL:ALL) ALL"
- - Now u can change user with "su MyName"
  - systemctl enable sddm ( and then reboot )
 ```
 
-### Phase-4 NVIDIA Drivers
+### Phase-4 Install AUR helper
+```
+ - AUR helpers are applications that install/build packages from AUR
+ - pacman -S base-devel git
+ - git clone https://aur.archlinux.org/yay.git
+ - cd yay && makepkg -si
+ - Install AUR packages using "yay -S slack-desktop"
+```
+
+### Phase-5 NVIDIA Drivers
 ```
  - If u have AMD u should be bing chilling
- - pacman -S optimus-manager nvidia
+ - yay -S optimus-manager
+ - pacman -S nvidia
  - systemctl enable optimus-manager
  - nano /etc/default/grub
    - To GRUB_CMDLINE_LINUX_DEFAULT="..." add "optimus-manager.startup=nvidia"
  - grub-mkconfig -o /boot/grub/grub.cfg ( and reboot )
 ```
 
-### Phase-5 Adding closest mirrors
+### Phase-6 Adding closest mirrors
 ```
  - Visit https://archlinux.org/mirrorlist/?ip_version=4
  - Add your location's mirrors to the file "/etc/pacman.d/mirrorlist" ( using nano ) on the top ( make sure you uncomment the mirrors )
+ - pacman -Syu
 ```
 
-### Phase-6 Installing Steam and applications
+### Phase-7 Installing Steam and applications
 ```
  - pacman -S dnsmasq firewalld powerdevil ( Trust me you want these )
    - systemctl enable dnsmasq firewalld
- - nano /etc/pacman.conf ( Uncomment the #[multilib] and #Include statement below it )
+ - nano /etc/pacman.conf
+   - Uncomment the #[multilib] and #Include statement below it
  - pacman -Syu
  - pacman -S steam ( Steam is a 32 bit application and hence requires multilib repository )
-```
-
-### Phase-7 Install AUR helper
-```
- - AUR helpers are applications that install packages from AUR
- - pacman -S base-devel git
- - git clone https://aur.archlinux.org/yay.git
- - cd yay && makepkg -si
- - Install AUR packages using "yay -S slack-desktop"
 ```
 
 ### General recommendations
